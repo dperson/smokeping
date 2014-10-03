@@ -1,0 +1,4 @@
+smokeping
+=========
+
+Smokeping docker instance
