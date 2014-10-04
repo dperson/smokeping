@@ -12,8 +12,9 @@ RUN apt-get update && \
 # Configure
 COPY smokeping.psgi /usr/lib/cgi-bin/
 RUN mkdir -p /var/lib/smokeping /var/run/smokeping && \
-    chown -Rh smokeping:www-data /var/lib/smokeping /var/run/smokeping && \
-    chmod -R g+ws /var/lib/smokeping
+    chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
+                /var/run/smokeping && \
+    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
 
