@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:trusty
 MAINTAINER David Personette <dperson@dperson.com>
 
 # Install lighttpd and smokeping
