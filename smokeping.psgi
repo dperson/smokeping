@@ -1,29 +1,24 @@
-# -*- cperl -*-
+#!/usr/bin/perl
+use strict;
+use warnings;
 
 use Plack::App::Directory;
 use Plack::Builder;
 use CGI::Emulate::PSGI;
-use CGI::Fast;
 
-use CGI qw();
-
-use warnings;
-use strict;
-
-use Smokeping;
-
-my $smokeping = sub {
+my $app = CGI::Emulate::PSGI->handler(sub {
+    use CGI;
+    use Smokeping;
     CGI::initialize_globals();
-
-    Smokeping::cgi("/etc/smokeping/config",new CGI::Fast);
-};
+    my $cfg = "/etc/smokeping/config";
+    my $q = CGI->new;
+    Smokeping::cgi($cfg, $q);
+});
 
 my $fileapp = Plack::App::Directory->new
     ({ 'root' => '/usr/share/smokeping/www' })->to_app;
 
-$smokeping  = CGI::Emulate::PSGI->handler( $smokeping );
-
 builder {
-    mount "/"           => $smokeping;
+    mount "/"           => $app;
     mount "/smokeping/" => $fileapp;
 };

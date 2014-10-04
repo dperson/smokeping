@@ -20,4 +20,4 @@ VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
 EXPOSE 5000
 
 CMD service smokeping start && \
-    plackup -p 5000 -s FCGI /usr/lib/cgi-bin/smokeping.psgi
+    plackup -p 5000 /usr/lib/cgi-bin/smokeping.psgi
