@@ -16,7 +16,7 @@ RUN mkdir -p /var/lib/smokeping /var/run/smokeping && \
     chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
                 /var/run/smokeping && \
     chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping &&\
-    sed 's/#cgi/cgi/; s/#	".pl/	".cgi/; s/#)/)/' \
+    sed -i 's/#cgi/cgi/; s/#	".pl/	".cgi/; s/#)/)/' \
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     lighttpd-enable-mod cgi && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
@@ -27,6 +27,6 @@ VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
 
 EXPOSE 80
 
-CMD chmod 0777 /dev/stderr /dev/stdout && \
-    service smokeping start && \
+CMD service smokeping start && \
+    chmod 0777 /dev/stderr /dev/stdout && \
     lighttpd -D -f /etc/lighttpd/lighttpd.conf
