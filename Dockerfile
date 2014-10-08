@@ -28,4 +28,4 @@ VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
 EXPOSE 80
 
 CMD service smokeping start && \
-    lighttpd -D
+    lighttpd -D -f /etc/lighttpd/lighttpd.conf
