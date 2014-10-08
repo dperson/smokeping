@@ -13,7 +13,8 @@ RUN apt-get update && \
 
 # Configure
 COPY 10-cgi.conf /etc/lighttpd/conf-available/
-RUN mkdir -p /var/lib/smokeping /var/run/smokeping && \
+RUN ln -sf /usr/share/zoneinfo/EST5EDT /etc/localtime && \
+    mkdir -p /var/lib/smokeping /var/run/smokeping && \
     chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
                 /var/run/smokeping && \
     chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping &&\
