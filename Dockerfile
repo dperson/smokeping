@@ -18,6 +18,7 @@ RUN mkdir -p /var/lib/smokeping /var/run/smokeping && \
                 /var/run/smokeping && \
     chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping &&\
     lighttpd-enable-mod cgi && \
+    lighttpd-enable-mod fastcgi && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
