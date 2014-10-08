@@ -4,21 +4,21 @@ MAINTAINER David Personette <dperson@dperson.com>
 # Install lighttpd and smokeping
 RUN apt-get update && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
-                libplack-app-proxy-perl libcgi-emulate-psgi-perl \
-                libfcgi-procmanager-perl fonts-dejavu-core echoping && \
+                fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Configure
-COPY smokeping.psgi /usr/lib/cgi-bin/
 RUN mkdir -p /var/lib/smokeping /var/run/smokeping && \
     chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
                 /var/run/smokeping && \
-    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping
+    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping && \
+    lighttpd-enable-mod cgi && \
+    ln -s /usr/share/smokeping/www /var/www/smokeping
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
 
-EXPOSE 5000
+EXPOSE 80
 
 CMD service smokeping start && \
-    plackup -p 5000 /usr/lib/cgi-bin/smokeping.psgi
+    lighttpd -D
