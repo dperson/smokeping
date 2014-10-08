@@ -6,7 +6,10 @@ RUN apt-get update && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    ln -sf /dev/stdout /var/log/lighttpd/access.log && \
+    ln -sf /dev/stderr /var/log/lighttpd/error.log
+# Forward request and error logs to docker log collector
 
 # Configure
 RUN mkdir -p /var/lib/smokeping /var/run/smokeping && \
