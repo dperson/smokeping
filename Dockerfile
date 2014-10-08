@@ -12,9 +12,13 @@ RUN apt-get update && \
 RUN mkdir -p /var/lib/smokeping /var/run/smokeping && \
     chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
                 /var/run/smokeping && \
-    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping && \
+    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping &&\
+    sed 's/#cgi/cgi/; s/#	".pl/	".cgi/; s/#)/)/' \
+                /etc/lighttpd/conf-available/10-cgi.conf && \
     lighttpd-enable-mod cgi && \
-    ln -s /usr/share/smokeping/www /var/www/smokeping
+    ln -s /usr/share/smokeping/www /var/www/smokeping && \
+    ln -s /usr/lib/cgi-bin /var/www/ && \
+    ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
 
