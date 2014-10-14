@@ -25,6 +25,8 @@ SmokePing keeps track of your network latency:
 
 ## Complex configuration
 
+[Example configs](http://oss.oetiker.ch/smokeping/doc/smokeping_examples.en.html)
+
 If you wish to adapt the default configuration, use something like the following
 to copy it from a running container:
 
