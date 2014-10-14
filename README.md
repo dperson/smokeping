@@ -28,7 +28,12 @@ SmokePing keeps track of your network latency:
 If you wish to adapt the default configuration, use something like the following
 to copy it from a running container:
 
-    sudo docker cp wiki:/some/file/or/directory /some/path
+    sudo docker cp smokeping:/etc/smokeping /some/path
+
+You can use the modified configuration with:
+
+    sudo docker run --name smokeping -p 8000:80 -v /some/path:/etc/smokeping:ro\
+                -d dperson/smokeping
 
 # User Feedback
 
