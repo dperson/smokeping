@@ -19,7 +19,7 @@ SmokePing keeps track of your network latency:
 
 # How to use this image
 
-## Hosting a Smokeping instance with reports on port 8000
+## Hosting a Smokeping instance on port 8000
 
     sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
 
