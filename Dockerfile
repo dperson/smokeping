@@ -13,12 +13,8 @@ RUN apt-get update && \
 
 # Configure
 COPY 10-cgi.conf /etc/lighttpd/conf-available/
-RUN ln -sf /usr/share/zoneinfo/EST5EDT /etc/localtime && \
-    mkdir -p /var/lib/smokeping /var/run/smokeping && \
-    chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
-                /var/run/smokeping && \
-    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping &&\
-    lighttpd-enable-mod cgi && \
+COPY smokeping.sh /usr/bin/
+RUN lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
@@ -28,6 +24,4 @@ VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
 
 EXPOSE 80
 
-CMD service smokeping start && \
-    chmod 0777 /dev/stderr /dev/stdout && \
-    lighttpd -D -f /etc/lighttpd/lighttpd.conf
+ENTRYPOINT ["smokeping.sh"]

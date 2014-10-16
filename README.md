@@ -23,6 +23,43 @@ SmokePing keeps track of your network latency:
 
     sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
 
+## Configuration
+
+    sudo docker run -it --rm dperson/smokeping -h
+
+    Usage: smokeping.sh [-opt] [command]
+    Options (fields in '[]' are optional, '<>' are required):
+        -h          This help
+        -g "<user;pass>" Configure ssmtp so that email alerts can be sent
+                    required arg: "<user>" - your gmail username
+                    required arg: "<pass>" - your gmail password of app password
+                    These are only set in your docker container
+        -t "<site;name;target>[;alert]" Configure smokeping targets
+                    required arg: "<site>" - name for site of tests
+                    required arg: "<name>" - name for check
+                    required arg: "<target>" - hostname or IP to check
+                    possible arg: "[alert]" - send emails on failures
+        -T ""       Configure timezone
+                    possible arg: "[timezone]" - zoneinfo timezone for container
+        -w          Wipe the targets clean
+
+    The 'command' (if provided and valid) will be run instead of nginx
+
+### Start smokeping, and configure sSMTP to forward alerts:
+
+    sudo docker run --rm -p 80:80 dperson/smokeping -g "exampleuser;examplepass"
+
+### Start smokeping, and timezone:
+
+    sudo docker run --rm -p 80:80 dperson/smokeping -T EST5EDT
+
+### Start smokeping, clear targets, setup a new one to the first hop from ISP:
+
+    IP=$(traceroute -n google.com |
+                egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
+                awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
+    sudo docker run --rm -p 80:80 dperson/smokeping -w -t "ISP;NextHop;$IP"
+
 ## Complex configuration
 
 [Example configs](http://oss.oetiker.ch/smokeping/doc/smokeping_examples.en.html)
