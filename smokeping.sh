@@ -90,7 +90,7 @@ target() {
 \
 + '"$site"'\
 menu = '"$site"'\
-title = '"$site" Network'
+title = '"$site Network"'
                 ' $file
 
     ## Target
