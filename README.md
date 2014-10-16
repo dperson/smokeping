@@ -34,6 +34,10 @@ SmokePing keeps track of your network latency:
                     required arg: "<user>" - your gmail username
                     required arg: "<pass>" - your gmail password of app password
                     These are only set in your docker container
+        -e "<email>" Configure email address for owner of smokeping
+                    required arg: "<email>" - your email address
+        -o "<name>" Configure name of the owner of smokeping
+                    required arg: "<name>" - your name
         -t "<site;name;target>[;alert]" Configure smokeping targets
                     required arg: "<site>" - name for site of tests
                     required arg: "<name>" - name for check
@@ -48,6 +52,14 @@ SmokePing keeps track of your network latency:
 ### Start smokeping, and configure sSMTP to forward alerts:
 
     sudo docker run --rm -p 80:80 dperson/smokeping -g "exampleuser;examplepass"
+
+### Start smokeping, and configure owners email address:
+
+    sudo docker run --rm -p 80:80 dperson/smokeping -e "exampleuser@gmail.com"
+
+### Start smokeping, and configure owners name:
+
+    sudo docker run --rm -p 80:80 dperson/smokeping -o "Example User"
 
 ### Start smokeping, and timezone:
 

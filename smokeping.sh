@@ -121,6 +121,10 @@ usage() {
     echo "Usage: ${0##*/} [-opt] [command]
 Options (fields in '[]' are optional, '<>' are required):
     -h          This help
+    -e \"<email>\" Configure email address for owner of smokeping
+                required arg: \"<email>\" - your email address
+    -o \"<name>\" Configure name of the owner of smokeping
+                required arg: \"<name>\" - your name
     -g \"<user;pass>\" Configure ssmtp so that email alerts can be sent
                 required arg: \"<user>\" - your gmail username
                 required arg: \"<pass>\" - your gmail password of app password
@@ -139,10 +143,12 @@ The 'command' (if provided and valid) will be run instead of nginx
     exit $RC
 }
 
-while getopts ":hg:t:T:w" opt; do
+while getopts ":hg:e:o:t:T:w" opt; do
     case "$opt" in
         h) usage ;;
         g) eval gmail $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
+        e) email $OPTARG ;;
+        o) owner $OPTARG ;;
         t) eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
         T) timezone $OPTARG ;;
         w) wipe ;;
