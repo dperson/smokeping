@@ -49,6 +49,28 @@ AuthPass='"$pass"'
     sed -i 's/^#*\(FromLineOverride=\).*/\1YES/' $conf
 }
 
+### email: Configure owners email address
+# Arguments:
+#   email) your email address
+# Return: setup owners email
+email() {
+    local email=$1
+    local file=/etc/smokeping/config.d/General
+
+    sed -i "s/^\(contact  = \).*/\\1$email/" $file
+}
+
+### owner: Configure owners name
+# Arguments:
+#   name) your name
+# Return: setup owners name
+owner() {
+    local name=$1
+    local file=/etc/smokeping/config.d/General
+
+    sed -i "s/^\(owner    = \).*/\\1$name/" $file
+}
+
 ### target: Configure a smokeping target
 # Arguments:
 #   site) name for site of tests
