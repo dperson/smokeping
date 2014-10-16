@@ -24,8 +24,8 @@ set -o nounset                              # Treat unset variables as an error
 #   pass) gmail password
 # Return: ssmtp will be able to send mail
 gmail() {
-    local user=$1
-    local pass=$2
+    local user="$1"
+    local pass="$2"
     local aliasfile=/etc/ssmtp/revaliases
     local conf=/etc/ssmtp/ssmtp.conf
 
@@ -54,7 +54,7 @@ AuthPass='"$pass"'
 #   email) your email address
 # Return: setup owners email
 email() {
-    local email=$1
+    local email="$1"
     local file=/etc/smokeping/config.d/General
 
     sed -i "s/^\(contact  = \).*/\\1$email/" $file
@@ -65,7 +65,7 @@ email() {
 #   name) your name
 # Return: setup owners name
 owner() {
-    local name=$1
+    local name="$1"
     local file=/etc/smokeping/config.d/General
 
     sed -i "s/^\(owner    = \).*/\\1$name/" $file
@@ -79,10 +79,10 @@ owner() {
 #   alert) send emails on failures
 # Return: setup smokeping target
 target() {
-    local site=$1
-    local name=$2
-    local target=$3
-    local alert=${4:-""}
+    local site="$1"
+    local name="$2"
+    local target="$3"
+    local alert="${4:-""}"
     local file=/etc/smokeping/config.d/Targets
 
     ## Site
@@ -169,10 +169,10 @@ while getopts ":hg:e:o:t:T:w" opt; do
     case "$opt" in
         h) usage ;;
         g) eval gmail $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
-        e) email $OPTARG ;;
-        o) owner $OPTARG ;;
+        e) email "$OPTARG" ;;
+        o) owner "$OPTARG" ;;
         t) eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
-        T) timezone $OPTARG ;;
+        T) timezone "$OPTARG" ;;
         w) wipe ;;
         "?") echo "Unknown option: -$OPTARG"; usage 1 ;;
         ":") echo "No argument value for option: -$OPTARG"; usage 2 ;;
