@@ -1,3 +1,5 @@
+[![logo](http://oss.oetiker.ch/smokeping/inc/smokeping-logo.png)](http://oss.oetiker.ch/smokeping/)
+
 # Smokeping
 
 Smokeping docker image
@@ -12,10 +14,6 @@ SmokePing keeps track of your network latency:
  * Master/Slave System for distributed measurement.
  * Highly configurable alerting system.
  * Live Latency Charts with the most 'interesting' graphs.
-
-[oss.oetiker.ch/smokeping](http://oss.oetiker.ch/smokeping/)
-
-![logo](http://oss.oetiker.ch/smokeping/inc/smokeping-logo.png)
 
 # How to use this image
 
@@ -51,26 +49,26 @@ SmokePing keeps track of your network latency:
 
 ### Start smokeping, and configure sSMTP to forward alerts:
 
-    sudo docker run --rm -p 80:80 dperson/smokeping -g "exampleuser;examplepass"
+    sudo docker run --rm -p 8000:80 dperson/smokeping -g "exampleuser;examplepass"
 
 ### Start smokeping, and configure owners email address:
 
-    sudo docker run --rm -p 80:80 dperson/smokeping -e "exampleuser@gmail.com"
+    sudo docker run --rm -p 8000:80 dperson/smokeping -e "exampleuser@gmail.com"
 
 ### Start smokeping, and configure owners name:
 
-    sudo docker run --rm -p 80:80 dperson/smokeping -o "Example User"
+    sudo docker run --rm -p 8000:80 dperson/smokeping -o "Example User"
 
 ### Start smokeping, and timezone:
 
-    sudo docker run --rm -p 80:80 dperson/smokeping -T EST5EDT
+    sudo docker run --rm -p 8000:80 dperson/smokeping -T EST5EDT
 
 ### Start smokeping, clear targets, setup a new one to the first hop from ISP:
 
     IP=$(traceroute -n google.com |
                 egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
                 awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
-    sudo docker run --rm -p 80:80 dperson/smokeping -w -t "ISP;NextHop;$IP"
+    sudo docker run --rm -p 8000:80 dperson/smokeping -w -t "ISP;NextHop;$IP"
 
 ## Complex configuration
 
