@@ -45,7 +45,7 @@ SmokePing keeps track of your network latency:
                     possible arg: "[timezone]" - zoneinfo timezone for container
         -w          Wipe the targets clean
 
-    The 'command' (if provided and valid) will be run instead of nginx
+    The 'command' (if provided and valid) will be run instead of smokeping
 
 ## Examples
 
