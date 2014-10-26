@@ -47,6 +47,15 @@ SmokePing keeps track of your network latency:
 
     The 'command' (if provided and valid) will be run instead of nginx
 
+## Examples
+
+Any of the commands can be run at creation with `docker run` or later with
+`docker exec smokeping.sh` (as of version 1.3 of docker).
+
+    sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
+    sudo docker exec smokeping smokeping.sh -T EST5EDT ls -AlF /etc/localtime
+    sudo docker start smokeping
+
 ### Start smokeping, and configure sSMTP to forward alerts:
 
     sudo docker run --rm -p 8000:80 dperson/smokeping -g "exampleuser;examplepass"
