@@ -67,7 +67,7 @@ Will get you the same settings as
 
     sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
     sudo docker exec smokeping smokeping.sh -T EST5EDT ls -AlF /etc/localtime
-    sudo docker start smokeping
+    sudo docker restart smokeping
 
 ### Start smokeping, and configure sSMTP to forward alerts:
 
