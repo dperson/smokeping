@@ -2,7 +2,8 @@ FROM ubuntu:trusty
 MAINTAINER David Personette <dperson@dperson.com>
 
 # Install lighttpd and smokeping
-RUN apt-get update && \
+RUN export TERM=dumb && \
+    apt-get update -qq && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
