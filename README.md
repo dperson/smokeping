@@ -2,7 +2,7 @@
 
 # Smokeping
 
-Smokeping docker image
+Smokeping docker container
 
 # What is Smokeping?
 
@@ -49,12 +49,12 @@ SmokePing keeps track of your network latency:
 
 ENVIROMENT VARIABLES (only available with `docker run`)
 
-`WIPE` - If set will wipe all targets
-`SSMTP_GMAIL` As above configure the ssmtp daemon for gmail, set to `user;pass`
-`EMAIL` - As above, your email address as the owner `bob@example.net`
-`OWNER` - As above, your name as the owner `Bob Hope`
-`TARGET` - As above a target to check, set to `site;name;target[;alert]`
-`TIMEZONE` - As above, set a zoneinfo timezone, IE `EST5EDT`
+ * `WIPE` - If set will wipe all targets
+ * `SSMTP_GMAIL` As above configure the ssmtp daemon for gmail, set to `user;pass`
+ * `EMAIL` - As above, your email address as the owner `bob@example.net`
+ * `OWNER` - As above, your name as the owner `Bob Hope`
+ * `TARGET` - As above a target to check, set to `site;name;target[;alert]`
+ * `TIMEZONE` - As above, set a zoneinfo timezone, IE `EST5EDT`
 
 ## Examples
 
