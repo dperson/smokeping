@@ -62,7 +62,9 @@ Any of the commands can be run at creation with `docker run` or later with
 `docker exec smokeping.sh` (as of version 1.3 of docker).
 
     sudo docker run --rm -p 8000:80 dperson/smokeping -T EST5EDT
+
 Will get you the same settings as
+
     sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
     sudo docker exec smokeping smokeping.sh -T EST5EDT ls -AlF /etc/localtime
     sudo docker start smokeping
@@ -70,27 +72,35 @@ Will get you the same settings as
 ### Start smokeping, and configure sSMTP to forward alerts:
 
     sudo docker run --rm -p 8000:80 dperson/smokeping -g "sampleuser;samplepass"
+
 OR
+
     sudo docker run --rm -p 8000:80 -e SSMTP_GMAIL="sampleuser;samplepass" \
                 dperson/smokeping
 
 ### Start smokeping, and configure owners email address:
 
     sudo docker run --rm -p 8000:80 dperson/smokeping -e "sampleuser@gmail.com"
+
 OR
+
     sudo docker run --rm -p 8000:80 -e EMAIL="sampleuser@gmail.com" \
                 dperson/smokeping
 
 ### Start smokeping, and configure owners name:
 
     sudo docker run --rm -p 8000:80 dperson/smokeping -o "Sample User"
+
 OR
+
     sudo docker run --rm -p 8000:80 -e OWNER="Sample User" dperson/smokeping
 
 ### Start smokeping, and timezone:
 
     sudo docker run --rm -p 8000:80 dperson/smokeping -T EST5EDT
+
 OR
+
     sudo docker run --rm -p 8000:80 -e TIMEZONE=EST5EDT dperson/smokeping
 
 ### Start smokeping, clear targets, setup a new one to the first hop from ISP:
@@ -99,7 +109,12 @@ OR
                 egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
                 awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
     sudo docker run --rm -p 8000:80 dperson/smokeping -w -t "ISP;NextHop;$IP"
+
 OR
+
+    IP=$(traceroute -n google.com |
+                egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
+                awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
     sudo docker run --rm -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
                 dperson/smokeping
 
