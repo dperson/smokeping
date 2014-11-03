@@ -181,13 +181,13 @@ while getopts ":hg:e:o:t:T:w" opt; do
 done
 shift $(( OPTIND - 1 ))
 
-[[ "$WIPE" ]] && wipe
-[[ "$SSMTP_GMAIL" ]] && eval gmail $(sed 's/^\|$/"/g; s/;/" "/g' <<< \
+[[ "${WIPE:-""}" ]] && wipe
+[[ "${SSMTP_GMAIL:-""}" ]] && eval gmail $(sed 's/^\|$/"/g; s/;/" "/g' <<< \
             $SSMTP_GMAIL)
-[[ "$EMAIL" ]] && email "$EMAIL"
-[[ "$OWNER" ]] && owner "$OWNER"
-[[ "$TARGET" ]] && eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $TARGET)
-[[ "$TIMEZONE" ]] && timezone "$TIMEZONE"
+[[ "${EMAIL:-""}" ]] && email "$EMAIL"
+[[ "${OWNER:-""}" ]] && owner "$OWNER"
+[[ "${TARGET:-""}" ]] && eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $TARGET)
+[[ "${TIMEZONE:-""}" ]] && timezone "$TIMEZONE"
 
 [[ -d /var/lib/smokeping ]] || mkdir -p /var/lib/smokeping
 [[ -d /var/run/smokeping ]] || mkdir -p /var/run/smokeping
