@@ -18,7 +18,7 @@ SmokePing keeps track of your network latency:
 # How to use this image
 
 When started the smokeping web inteface will listen on port 80 in the container
-at the '/smokeping' URI.
+at the '/smokeping/smokeping.cgi' URI.
 
 ## Hosting a Smokeping instance on port 8000
 
