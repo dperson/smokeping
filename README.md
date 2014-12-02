@@ -17,6 +17,9 @@ SmokePing keeps track of your network latency:
 
 # How to use this image
 
+When started the smokeping web inteface will listen on port 80 in the container
+at the '/smokeping' URI.
+
 ## Hosting a Smokeping instance on port 8000
 
     sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
@@ -117,6 +120,14 @@ OR
                 awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
     sudo docker run --rm -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
                 dperson/smokeping
+
+### To add additional targets (replace values in <> with your own):
+
+    sudo docker exec <name_of_instance> smokeping.sh -t "<site;name;target>"
+
+IE
+
+    sudo docker exec stupefied_newton smokeping.sh -t "home;router;bob.dyndns.org"
 
 ## Complex configuration
 

@@ -2,11 +2,10 @@ FROM ubuntu:trusty
 MAINTAINER David Personette <dperson@dperson.com>
 
 # Install lighttpd and smokeping
-RUN export TERM=dumb && \
-    apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
-                fonts-dejavu-core echoping curl lighttpd && \
-    apt-get clean && \
+RUN TERM=dumb apt-get update -qq && \
+    TERM=dumb apt-get install -qqy --no-install-recommends smokeping ssmtp \
+                dnsutils fonts-dejavu-core echoping curl lighttpd && \
+    TERM=dumb apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     ln -sf /dev/stdout /var/log/lighttpd/access.log && \
     ln -sf /dev/stderr /var/log/lighttpd/error.log
