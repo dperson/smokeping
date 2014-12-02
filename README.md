@@ -72,6 +72,29 @@ Will get you the same settings as
     sudo docker exec smokeping smokeping.sh -T EST5EDT ls -AlF /etc/localtime
     sudo docker restart smokeping
 
+### Start smokeping, clear targets, setup a new one to the first hop from ISP:
+
+    IP=$(traceroute -n google.com |
+                egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
+                awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
+    sudo docker run --rm -p 8000:80 dperson/smokeping -w -t "ISP;NextHop;$IP"
+
+OR
+
+    IP=$(traceroute -n google.com |
+                egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
+                awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
+    sudo docker run --rm -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
+                dperson/smokeping
+
+### To add additional targets (replace values in <> with your own):
+
+    sudo docker exec <name_of_instance> smokeping.sh -t "<site;name;target>"
+
+IE
+
+    sudo docker exec stunned_newton smokeping.sh -t "home;router;bob.dyndns.org"
+
 ### Start smokeping, and configure sSMTP to forward alerts:
 
     sudo docker run --rm -p 8000:80 dperson/smokeping -g "sampleuser;samplepass"
@@ -105,29 +128,6 @@ OR
 OR
 
     sudo docker run --rm -p 8000:80 -e TIMEZONE=EST5EDT dperson/smokeping
-
-### Start smokeping, clear targets, setup a new one to the first hop from ISP:
-
-    IP=$(traceroute -n google.com |
-                egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
-                awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
-    sudo docker run --rm -p 8000:80 dperson/smokeping -w -t "ISP;NextHop;$IP"
-
-OR
-
-    IP=$(traceroute -n google.com |
-                egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
-                awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
-    sudo docker run --rm -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
-                dperson/smokeping
-
-### To add additional targets (replace values in <> with your own):
-
-    sudo docker exec <name_of_instance> smokeping.sh -t "<site;name;target>"
-
-IE
-
-    sudo docker exec stupefied_newton smokeping.sh -t "home;router;bob.dyndns.org"
 
 ## Complex configuration
 
