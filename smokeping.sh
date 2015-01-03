@@ -23,12 +23,8 @@ set -o nounset                              # Treat unset variables as an error
 #   user) gmail user
 #   pass) gmail password
 # Return: ssmtp will be able to send mail
-gmail() {
-    local user="$1"
-    local pass="$2"
-    local aliasfile=/etc/ssmtp/revaliases
-    local conf=/etc/ssmtp/ssmtp.conf
-
+gmail() { local user="$1" pass="$2" aliasfile=/etc/ssmtp/revaliases \
+            conf=/etc/ssmtp/ssmtp.conf
     sed -i '/^root/d' $aliasfile
     echo "root:${user}+smokeping@gmail.com:smtp.gmail.com:587" >> $aliasfile
 
@@ -54,10 +50,7 @@ AuthPass='"$pass"'
 # Arguments:
 #   email) your email address
 # Return: setup owners email
-email() {
-    local email="$1"
-    local file=/etc/smokeping/config.d/General
-
+email() { local email="$1" file=/etc/smokeping/config.d/General
     sed -i "s/^\(contact  = \).*/\\1$email/" $file
 }
 
@@ -65,10 +58,7 @@ email() {
 # Arguments:
 #   name) your name
 # Return: setup owners name
-owner() {
-    local name="$1"
-    local file=/etc/smokeping/config.d/General
-
+owner() { local name="$1" file=/etc/smokeping/config.d/General
     sed -i "s/^\(owner    = \).*/\\1$name/" $file
 }
 
@@ -79,13 +69,8 @@ owner() {
 #   target) hostname or IP to check
 #   alert) send emails on failures
 # Return: setup smokeping target
-target() {
-    local site="$1"
-    local name="$2"
-    local target="$3"
-    local alert="${4:-""}"
-    local file=/etc/smokeping/config.d/Targets
-
+target() { local site="$1" name="$2" target="$3" alert="${4:-""}" line="" \
+            file=/etc/smokeping/config.d/Targets
     ## Site
     grep -q "^+ $site\$" $file || sed -i '$a \
 \
@@ -96,7 +81,7 @@ title = '"$site Network"'
 
     ## Target
     sed -i '/^++ '"$name"'$/,/^$/d; /^++ '"$name"'$/,$d' $file
-    local line="$(grep -n "^+ " $file | cut -d: -f1 |
+    line="$(grep -n "^+ " $file | cut -d: -f1 |
                 sed "0,/^$(grep -n "^+ $site\$" $file | cut -d: -f1)\$/d" |
                 head -n 1 | grep '[0-9]' || echo '$')"
     sed -i "$line"'a \
@@ -113,9 +98,7 @@ host = '"$target"'\
 # Arguments:
 #   timezone) for example EST5EDT
 # Return: the correct zoneinfo file will be symlinked into place
-timezone() {
-    local timezone="${1:-EST5EDT}"
-
+timezone() { local timezone="${1:-EST5EDT}"
     [[ -e /usr/share/zoneinfo/$timezone ]] || {
         echo "ERROR: invalid timezone specified" >&2
         return
@@ -128,9 +111,7 @@ timezone() {
 # Arguments:
 #   none)
 # Return: no defined targets
-wipe() {
-    local file=/etc/smokeping/config.d/Targets
-
+wipe() { local file=/etc/smokeping/config.d/Targets
     sed -i '/^+/,$d' $file
 }
 
@@ -138,9 +119,7 @@ wipe() {
 # Arguments:
 #   none)
 # Return: Help text
-usage() {
-    local RC=${1:-0}
-
+usage() { local RC=${1:-0}
     echo "Usage: ${0##*/} [-opt] [command]
 Options (fields in '[]' are optional, '<>' are required):
     -h          This help
