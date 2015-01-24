@@ -64,7 +64,7 @@ ENVIROMENT VARIABLES (only available with `docker run`)
 Any of the commands can be run at creation with `docker run` or later with
 `docker exec smokeping.sh` (as of version 1.3 of docker).
 
-    sudo docker run --rm -p 8000:80 -d dperson/smokeping -T EST5EDT
+    sudo docker run -p 8000:80 -d dperson/smokeping -T EST5EDT
 
 Will get you the same settings as
 
@@ -77,14 +77,14 @@ Will get you the same settings as
     IP=$(traceroute -n google.com |
                 egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
                 awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
-    sudo docker run --rm -p 8000:80 -d dperson/smokeping -w -t "ISP;NextHop;$IP"
+    sudo docker run -p 8000:80 -d dperson/smokeping -w -t "ISP;NextHop;$IP"
 
 OR
 
     IP=$(traceroute -n google.com |
                 egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
                 awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
-    sudo docker run --rm -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
+    sudo docker run -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
                 -d dperson/smokeping
 
 ### To add additional targets (replace values in <> with your own):
@@ -97,39 +97,37 @@ IE
 
 ### Start smokeping, and configure sSMTP to forward alerts:
 
-    sudo docker run --rm -p 8000:80 -d dperson/smokeping \
-                -g "sampleuser;samplepass"
+    sudo docker run -p 8000:80 -d dperson/smokeping -g "sampleuser;samplepass"
 
 OR
 
-    sudo docker run --rm -p 8000:80 -e SSMTP_GMAIL="sampleuser;samplepass" \
+    sudo docker run -p 8000:80 -e SSMTP_GMAIL="sampleuser;samplepass" \
                 -d dperson/smokeping
 
 ### Start smokeping, and configure owners email address:
 
-    sudo docker run --rm -p 8000:80 -d dperson/smokeping \
-                -e "sampleuser@gmail.com"
+    sudo docker run -p 8000:80 -d dperson/smokeping -e "sampleuser@gmail.com"
 
 OR
 
-    sudo docker run --rm -p 8000:80 -e EMAIL="sampleuser@gmail.com" \
+    sudo docker run -p 8000:80 -e EMAIL="sampleuser@gmail.com" \
                 -d dperson/smokeping
 
 ### Start smokeping, and configure owners name:
 
-    sudo docker run --rm -p 8000:80 -d dperson/smokeping -o "Sample User"
+    sudo docker run -p 8000:80 -d dperson/smokeping -o "Sample User"
 
 OR
 
-    sudo docker run --rm -p 8000:80 -e OWNER="Sample User" -d dperson/smokeping
+    sudo docker run -p 8000:80 -e OWNER="Sample User" -d dperson/smokeping
 
 ### Start smokeping, and timezone:
 
-    sudo docker run --rm -p 8000:80 -d dperson/smokeping -T EST5EDT
+    sudo docker run -p 8000:80 -d dperson/smokeping -T EST5EDT
 
 OR
 
-    sudo docker run --rm -p 8000:80 -e TIMEZONE=EST5EDT -d dperson/smokeping
+    sudo docker run -p 8000:80 -e TIMEZONE=EST5EDT -d dperson/smokeping
 
 ## Complex configuration
 
