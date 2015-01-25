@@ -11,8 +11,6 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
-    sed -i 's|/var/log/lighttpd/error.log|/dev/stderr|' \
-                /etc/lighttpd/lighttpd.conf && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
