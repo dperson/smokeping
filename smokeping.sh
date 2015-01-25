@@ -181,6 +181,5 @@ elif [[ $# -ge 1 ]]; then
     exit 13
 else
     service smokeping start
-    chmod 0777 /dev/stderr /dev/stdout
     exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
 fi

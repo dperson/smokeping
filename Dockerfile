@@ -9,10 +9,10 @@ RUN apt-get update -qq && \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
-    ln -sf /dev/stdout /var/log/lighttpd/access.log && \
-    ln -sf /dev/stderr /var/log/lighttpd/error.log && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
+    sed -i 's|/var/log/lighttpd/error.log|/dev/stderr|' \
+                /etc/lighttpd/lighttpd.conf && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
