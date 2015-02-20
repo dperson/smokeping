@@ -7,7 +7,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* && \
     sed -i '/server.document-root/s|/html||' \
                 /etc/lighttpd/lighttpd.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
@@ -23,6 +22,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
+    rm -rf /var/lib/apt/lists/* /tmp/* && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
