@@ -1,10 +1,9 @@
 FROM ubuntu:trusty
 MAINTAINER David Personette <dperson@dperson.com>
 
-ENV DEBIAN_FRONTEND noninteractive
-
 # Install lighttpd and smokeping
-RUN apt-get update -qq && \
+RUN export DEBIAN_FRONTEND='noninteractive' && \
+    apt-get update -qq && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
