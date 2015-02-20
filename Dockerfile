@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM debian:jessie
 MAINTAINER David Personette <dperson@dperson.com>
 
 # Install lighttpd and smokeping
@@ -8,13 +8,25 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
+    sed -i '/server.document-root/s|/html||' \
+                /etc/lighttpd/lighttpd.conf && \
+    sed -i '/^#cgi\.assign/,$s/^#//; /\.pl/i \ \t".cgi"  => "/usr/bin/perl"' \
+                /etc/lighttpd/conf-available/10-cgi.conf && \
+    sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
+                -e '/max-procs/a \ \t\t"idle-timeout" => 20,' \
+                /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
+    grep -q 'allow-x-send-file' \
+                /etc/lighttpd/conf-available/15-fastcgi-php.conf || { \
+        sed -i '/idle-timeout/a \ \t\t"allow-x-send-file" => "enable",' \
+                    /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
+        sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
+                    /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
 
-COPY 10-cgi.conf /etc/lighttpd/conf-available/
 COPY smokeping.sh /usr/bin/
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
