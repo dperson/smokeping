@@ -10,7 +10,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
     sed -i '/server.document-root/s|/html||' \
                 /etc/lighttpd/lighttpd.conf && \
-    sed -i '/^#cgi\.assign/,$s/^#//; /\.pl/i \ \t".cgi"  => "/usr/bin/perl"' \
+    sed -i '/^#cgi\.assign/,$s/^#//; /\.pl/i \ \t".cgi"  => "/usr/bin/perl",' \
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
                 -e '/max-procs/a \ \t\t"idle-timeout" => 20,' \
