@@ -7,8 +7,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
-    sed -i '/server.document-root/s|/html||' \
+    sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
                 /etc/lighttpd/lighttpd.conf && \
+    sed -i '/server.errorlog/s|".*"|"/dev/stderr"|' \
+                /etc/lighttpd/lighttpd.conf && \
+    sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
