@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get clean && \
     sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
                 /etc/lighttpd/lighttpd.conf && \
-    sed -i '/server.errorlog/s|".*"|"/dev/stderr"|' \
+    sed -i '/server.errorlog/s|".*"|"/dev/stdout"|' \
                 /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
