@@ -10,6 +10,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sed -i '/server.errorlog/s|".*"|"/dev/stdout"|' \
                 /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
+    sed -i 's|/var/log/lighttpd/access.log|/dev/stdout|' \
+                /etc/lighttpd/conf-available/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
@@ -21,14 +23,13 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
+    lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
-    #sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
-    #            /etc/lighttpd/lighttpd.conf && \
 COPY smokeping.sh /usr/bin/
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
