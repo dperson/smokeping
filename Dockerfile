@@ -7,10 +7,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
-    sed -i '/server.errorlog/s|".*"|"/dev/stdout"|' \
-                /etc/lighttpd/lighttpd.conf && \
+    sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
-    sed -i 's|/var/log/lighttpd/access.log|/dev/stdout|' \
+    sed -i '/accesslog.filename/s|^|#|' \
                 /etc/lighttpd/conf-available/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
