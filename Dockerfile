@@ -7,8 +7,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd && \
     apt-get clean && \
-    sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
-                /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.errorlog/s|".*"|"/dev/stdout"|' \
                 /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
@@ -23,14 +21,14 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
-    lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
-
+    #sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
+    #            /etc/lighttpd/lighttpd.conf && \
 COPY smokeping.sh /usr/bin/
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
