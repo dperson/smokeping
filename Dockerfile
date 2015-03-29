@@ -5,7 +5,8 @@ MAINTAINER David Personette <dperson@dperson.com>
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
-                fonts-dejavu-core echoping curl lighttpd && \
+                fonts-dejavu-core echoping curl lighttpd \
+                $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
     sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
