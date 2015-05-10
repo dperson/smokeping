@@ -23,7 +23,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     sed -i 's|/usr/bin/smokeping_cgi|/usr/lib/cgi-bin/smokeping.cgi|' \
                 /usr/share/smokeping/www/smokeping.fcgi.dist && \
-    mv /usr/share/smokeping/www/smokeping.fcgi{.dist,} && \
+    mv /usr/share/smokeping/www/smokeping.fcgi.dist \
+                /usr/share/smokeping/www/smokeping.fcgi && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     rm -rf /var/lib/apt/lists/* /tmp/* && \
