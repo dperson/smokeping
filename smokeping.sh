@@ -174,7 +174,9 @@ chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
             /var/run/smokeping
 chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping
 
-if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
+if ps -ef | grep -q smokeping; then
+    echo "Service already running, please restart container to apply changes"
+elif [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
 elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
