@@ -174,13 +174,13 @@ chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
             /var/run/smokeping
 chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping
 
-if ps -ef | egrep -v 'grep|smokeping.sh' | grep -q smokeping; then
-    echo "Service already running, please restart container to apply changes"
-elif [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
+if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
 elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
     exit 13
+elif ps -ef | egrep -v 'grep|smokeping.sh' | grep -q smokeping; then
+    echo "Service already running, please restart container to apply changes"
 else
     service smokeping start
     exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
