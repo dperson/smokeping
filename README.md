@@ -52,6 +52,7 @@ at the '/smokeping/smokeping.cgi' URI.
 
 ENVIROMENT VARIABLES (only available with `docker run`)
 
+ * `SPUSER` - If set use named user instead of 'smokeping' (for example root)
  * `WIPE` - If set will wipe all targets
  * `SSMTP_GMAIL` As above configure the ssmtp daemon for gmail, set to `user;pass`
  * `EMAIL` - As above, your email address as the owner `bob@example.net`
