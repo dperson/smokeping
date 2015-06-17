@@ -148,5 +148,15 @@ You can use the modified configuration with:
 
 ## Issues
 
+### No graphs generated even after >15 minutes
+
+If you are affected by this issue (a small percentage of users are) please try
+setting the SPUSER environment variable to root, IE:
+
+    sudo docker run --name smokeping -p 8000:80 -e SPUSER=root -d \
+                dperson/smokeping
+
+### Reporting
+
 If you have any problems with or questions about this image, please contact me
 through a [GitHub issue](https://github.com/dperson/smokeping/issues).
