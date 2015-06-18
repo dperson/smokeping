@@ -92,6 +92,12 @@ title = '"$name"'\
 host = '"$target"'\
 '"$([[ "${alert:-""}" ]] && echo "alerts = someloss")"'
                 ' $file
+    grep -q '^http:' <<< "$target" && sed -i '/^host = '"$target"'$/a \
+probe = EchoPingHttp
+                ' $file
+    grep -q '^https:' <<< "$target" && sed -i '/^host = '"$target"'$/a \
+probe = EchoPingHttps
+                ' $file
 }
 
 ### timezone: Set the timezone for the container
@@ -135,6 +141,7 @@ Options (fields in '[]' are optional, '<>' are required):
                 required arg: \"<site>\" - name for site of tests
                 required arg: \"<name>\" - name for check
                 required arg: \"<target>\" - hostname or IP to check
+                            Targets can also be http:// or https:// URLs
                 possible arg: \"[alert]\" - send emails on failures
     -T \"\"       Configure timezone
                 possible arg: \"[timezone]\" - zoneinfo timezone for container
