@@ -92,10 +92,10 @@ title = '"$name"'\
 host = '"$target"'\
 '"$([[ "${alert:-""}" ]] && echo "alerts = someloss")"'
                 ' $file
-    grep -q '^http:' <<< "$target" && sed -i '/^host = '"$target"'$/a \
+    grep -iq '^http:' <<< "$target" && sed -i '/^host = '"$target"'$/a \
 probe = EchoPingHttp
                 ' $file
-    grep -q '^https:' <<< "$target" && sed -i '/^host = '"$target"'$/a \
+    grep -iq '^https:' <<< "$target" && sed -i '/^host = '"$target"'$/a \
 probe = EchoPingHttps
                 ' $file
 }
