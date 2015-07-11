@@ -27,13 +27,20 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 /usr/share/smokeping/www/smokeping.fcgi && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
+    [[ -d /var/cache/smokeping ]] || mkdir -p /var/cache/smokeping && \
+    [[ -d /var/lib/smokeping ]] || mkdir -p /var/lib/smokeping && \
+    [[ -d /var/run/smokeping ]] || mkdir -p /var/run/smokeping && \
+    chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
+                /var/run/smokeping && \
+    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping &&\
     rm -rf /var/lib/apt/lists/* /tmp/* && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
 COPY smokeping.sh /usr/bin/
 
-VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/lib/smokeping"]
+VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/cache/smokeping", \
+            "/var/lib/smokeping", "/var/run/smokeping"]
 
 EXPOSE 80
 

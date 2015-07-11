@@ -177,8 +177,6 @@ shift $(( OPTIND - 1 ))
 [[ "${TARGET:-""}" ]] && eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $TARGET)
 [[ "${TIMEZONE:-""}" ]] && timezone "$TIMEZONE"
 
-[[ -d /var/lib/smokeping ]] || mkdir -p /var/lib/smokeping
-[[ -d /var/run/smokeping ]] || mkdir -p /var/run/smokeping
 chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
             /var/run/smokeping
 chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping
