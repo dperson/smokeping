@@ -8,6 +8,10 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 fonts-dejavu-core echoping curl lighttpd \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
+    echo -e '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' >> \
+                /etc/smokeping/config.d/Probes && \
+    echo -e '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' >> \
+                /etc/smokeping/config.d/Probes && \
     sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
