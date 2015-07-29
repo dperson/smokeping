@@ -8,9 +8,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 fonts-dejavu-core echoping curl lighttpd \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
-    echo -e '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' >> \
+    /bin/echo -e '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' >> \
                 /etc/smokeping/config.d/Probes && \
-    echo -e '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' >> \
+    /bin/echo -e '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' >> \
                 /etc/smokeping/config.d/Probes && \
     sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
@@ -31,9 +31,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 /usr/share/smokeping/www/smokeping.fcgi && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
-    [[ -d /var/cache/smokeping ]] || mkdir -p /var/cache/smokeping && \
-    [[ -d /var/lib/smokeping ]] || mkdir -p /var/lib/smokeping && \
-    [[ -d /var/run/smokeping ]] || mkdir -p /var/run/smokeping && \
+    [ -d /var/cache/smokeping ] || mkdir -p /var/cache/smokeping && \
+    [ -d /var/lib/smokeping ] || mkdir -p /var/lib/smokeping && \
+    [ -d /var/run/smokeping ] || mkdir -p /var/run/smokeping && \
     chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
                 /var/run/smokeping && \
     chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /var/run/smokeping &&\
@@ -41,6 +41,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
+
 COPY smokeping.sh /usr/bin/
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp", "/var/cache/smokeping", \
