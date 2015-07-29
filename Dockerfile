@@ -14,8 +14,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 /etc/smokeping/config.d/Probes && \
     sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
-    sed -i '/#\s*"mod_rewrite"/s|#||' /etc/lighttpd/lighttpd.conf && \
-    /bin/echo -e 'url.rewrite-once            = ( "^/$" => "/smokeping/smokeping.cgi" )' >> \
+    /bin/echo -e 'url.redirect  = ("^/$" => "/smokeping/smokeping.cgi")' >> \
                 /etc/lighttpd/lighttpd.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
