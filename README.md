@@ -1,4 +1,4 @@
-[![logo](http://oss.oetiker.ch/smokeping/inc/smokeping-logo.png)](http://oss.oetiker.ch/smokeping/)
+[![logo](https://raw.githubusercontent.com/dperson/smokeping/master/logo.png)](http://oss.oetiker.ch/smokeping/)
 
 # Smokeping
 
