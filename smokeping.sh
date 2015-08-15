@@ -106,11 +106,15 @@ probe = EchoPingHttps
 # Return: the correct zoneinfo file will be symlinked into place
 timezone() { local timezone="${1:-EST5EDT}"
     [[ -e /usr/share/zoneinfo/$timezone ]] || {
-        echo "ERROR: invalid timezone specified" >&2
+        echo "ERROR: invalid timezone specified: $timezone" >&2
         return
     }
 
-    ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+    if [[ $(cat /etc/timezone) != $timezone ]]; then
+        echo "$timezone" > /etc/timezone
+        ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+        dpkg-reconfigure -f noninteractive tzdata
+    fi
 }
 
 ### wipe: wipe out the current targets
@@ -175,7 +179,7 @@ shift $(( OPTIND - 1 ))
 [[ "${EMAIL:-""}" ]] && email "$EMAIL"
 [[ "${OWNER:-""}" ]] && owner "$OWNER"
 [[ "${TARGET:-""}" ]] && eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $TARGET)
-[[ "${TIMEZONE:-""}" ]] && timezone "$TIMEZONE"
+[[ "${TZ:-""}" ]] && timezone "$TZ"
 
 chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
             /var/run/smokeping

@@ -59,14 +59,20 @@ ENVIROMENT VARIABLES (only available with `docker run`)
  * `EMAIL` - As above, your email address as the owner `bob@example.net`
  * `OWNER` - As above, your name as the owner `Bob Hope`
  * `TARGET` - As above a target to check, set to `site;name;target[;alert]`
- * `TIMEZONE` - As above, set a zoneinfo timezone, IE `EST5EDT`
+ * `TZ` - As above, set a zoneinfo timezone, IE `EST5EDT`
 
 ## Examples
 
 Any of the commands can be run at creation with `docker run` or later with
 `docker exec smokeping.sh` (as of version 1.3 of docker).
 
+### Setting the Timezone
+
     sudo docker run -p 8000:80 -d dperson/smokeping -T EST5EDT
+
+OR using `environment variables`
+
+    sudo docker run -p 8000:80 -e TZ=EST5EDT -d dperson/smokeping
 
 Will get you the same settings as
 
@@ -122,14 +128,6 @@ OR
 OR
 
     sudo docker run -p 8000:80 -e OWNER="Sample User" -d dperson/smokeping
-
-### Start smokeping, and timezone:
-
-    sudo docker run -p 8000:80 -d dperson/smokeping -T EST5EDT
-
-OR
-
-    sudo docker run -p 8000:80 -e TIMEZONE=EST5EDT -d dperson/smokeping
 
 ## Complex configuration
 
