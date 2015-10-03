@@ -59,7 +59,9 @@ ENVIROMENT VARIABLES (only available with `docker run`)
  * `EMAIL` - As above, your email address as the owner `bob@example.net`
  * `OWNER` - As above, your name as the owner `Bob Hope`
  * `TARGET` - As above a target to check, set to `site;name;target[;alert]`
- * `TZ` - As above, set a zoneinfo timezone, IE `EST5EDT`
+ * `TZ` - As above, configure the zoneinfo timezone, IE `EST5EDT`
+ * `USERID` - Set the UID for the app user
+ * `GROUPID` - Set the GID for the app user
 
 ## Examples
 
