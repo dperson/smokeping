@@ -31,6 +31,16 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
+    echo -e '\nfastcgi.server += ( ".cgi" =>\n\t((' >> \
+                /etc/lighttpd/conf-available/10-fastcgi.conf && \
+    echo -e '\t\t"socket" => "/tmp/perl.socket" + var.PID,' >> \
+                /etc/lighttpd/conf-available/10-fastcgi.conf && \
+    echo -e '\t\t"bin-path" => "/usr/share/smokeping/www/smokeping.fcgi",' >> \
+                /etc/lighttpd/conf-available/10-fastcgi.conf && \
+    echo -e '\t\t"docroot" => "/var/www",' >> \
+                /etc/lighttpd/conf-available/10-fastcgi.conf && \
+    echo -e '\t\t"check-local"     => "disable",\n\t))\n)' >> \
+                /etc/lighttpd/conf-available/10-fastcgi.conf && \
     sed -i 's|/usr/bin/smokeping_cgi|/usr/lib/cgi-bin/smokeping.cgi|' \
                 /usr/share/smokeping/www/smokeping.fcgi.dist && \
     mv /usr/share/smokeping/www/smokeping.fcgi.dist \
