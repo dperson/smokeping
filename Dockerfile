@@ -31,39 +31,16 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
-    echo -e '\nfastcgi.server += ( ".cgi" =>\n\t((' >> \
+    /bin/echo -e '\nfastcgi.server += ( ".cgi" =>\n\t((' >> \
                 /etc/lighttpd/conf-available/10-fastcgi.conf && \
-    echo -e '\t\t"socket" => "/tmp/perl.socket" + var.PID,' >> \
+    /bin/echo -e '\t\t"socket" => "/tmp/perl.socket" + var.PID,' >> \
                 /etc/lighttpd/conf-available/10-fastcgi.conf && \
-    echo -e '\t\t"bin-path" => "/usr/bin/dispatch.fcgi",' >> \
+    /bin/echo -e '\t\t"bin-path" => "/usr/share/smokeping/www/smokeping.fcgi",'\
+                >> /etc/lighttpd/conf-available/10-fastcgi.conf && \
+    /bin/echo -e '\t\t"docroot" => "/var/www",' >> \
                 /etc/lighttpd/conf-available/10-fastcgi.conf && \
-    echo -e '\t\t"docroot" => "/var/www",' >> \
+    /bin/echo -e '\t\t"check-local"     => "disable",\n\t))\n)' >> \
                 /etc/lighttpd/conf-available/10-fastcgi.conf && \
-    echo -e '\t\t"check-local"     => "disable",\n\t))\n)' >> \
-                /etc/lighttpd/conf-available/10-fastcgi.conf && \
-    echo -e 'use strict;\nuse CGI::Fast;\nuse Embed::Persistent; {' > \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '    my $p = Embed::Persistent->new();' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '    while (new CGI::Fast) {\n' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '        my $filename = $ENV{SCRIPT_FILENAME};' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '        my $package  = $p->valid_package_name($filename);' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '        my $mtime;\n' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '        if ($p->cached($filename, $package, \$mtime)) {' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '            eval {$package->handler;};\n        }' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '        else {' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '            $p->eval_file($ENV{SCRIPT_FILENAME});' >> \
-                /usr/bin/dispatch.fcgi && \
-    echo -e '        }\n    }\n}' >> \
-                /usr/bin/dispatch.fcgi && \
-    chmod +x /usr/bin/dispatch.fcgi && \
     sed -i 's|/usr/bin/smokeping_cgi|/usr/lib/cgi-bin/smokeping.cgi|' \
                 /usr/share/smokeping/www/smokeping.fcgi.dist && \
     mv /usr/share/smokeping/www/smokeping.fcgi.dist \
