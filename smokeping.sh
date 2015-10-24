@@ -26,7 +26,7 @@ set -o nounset                              # Treat unset variables as an error
 gmail() { local user="$1" pass="$2" aliasfile=/etc/ssmtp/revaliases \
             conf=/etc/ssmtp/ssmtp.conf
     sed -i '/^root/d' $aliasfile
-    echo "root:${user}+smokeping@gmail.com:smtp.gmail.com:587" >> $aliasfile
+    echo "root:${user}+smokeping@gmail.com:smtp.gmail.com:587" >>$aliasfile
 
     sed -i 's/^\(root=\).*/\1'"$user"'+smokeping@gmail.com/' $conf
     sed -i 's/^\(mailhub=\).*/\1smtp.gmail.com:587/' $conf
@@ -111,7 +111,7 @@ timezone() { local timezone="${1:-EST5EDT}"
     }
 
     if [[ $(cat /etc/timezone) != $timezone ]]; then
-        echo "$timezone" > /etc/timezone
+        echo "$timezone" >/etc/timezone
         ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
         dpkg-reconfigure -f noninteractive tzdata >/dev/null 2>&1
     fi
