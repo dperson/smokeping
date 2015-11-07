@@ -1,0 +1,14 @@
+*** Probes ***
+
++ FPing
+
+binary = /usr/bin/fping
+
++ EchoPingHttp
+
+binary = /usr/bin/echoping
+
++ EchoPingHttps
+
+binary = /usr/bin/echoping
+
