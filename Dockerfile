@@ -7,45 +7,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
                 fonts-dejavu-core echoping curl lighttpd \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
-    apt-get clean && \
-    /bin/echo -e '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' \
-                >>/etc/smokeping/config.d/Probes && \
-    /bin/echo -e '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' \
-                >>/etc/smokeping/config.d/Probes && \
-    sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
-    sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
-    /bin/echo -e '\n# redirect to the right Smokeping URI' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    echo 'url.redirect  = ("^/$" => "/smokeping/smokeping.cgi",' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    /bin/echo -e '\t\t\t"^/smokeping/?$" => "/smokeping/smokeping.cgi")' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
-                /etc/lighttpd/conf-available/10-cgi.conf && \
-    sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
-                -e '/max-procs/a \ \t\t"idle-timeout" => 20,' \
-                /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
-    grep -q 'allow-x-send-file' \
-                /etc/lighttpd/conf-available/15-fastcgi-php.conf || { \
-        sed -i '/idle-timeout/a \ \t\t"allow-x-send-file" => "enable",' \
-                    /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
-        sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
-                    /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
-    /bin/echo -e '\nfastcgi.server += ( ".cgi" =>\n\t((' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
-    /bin/echo -e '\t\t"socket" => "/tmp/perl.socket" + var.PID,' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
-    /bin/echo -e '\t\t"bin-path" => "/usr/share/smokeping/www/smokeping.fcgi",'\
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
-    /bin/echo -e '\t\t"docroot" => "/var/www",' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
-    /bin/echo -e '\t\t"check-local"     => "disable",\n\t))\n)' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
-    sed -i 's|/usr/bin/smokeping_cgi|/usr/lib/cgi-bin/smokeping.cgi|' \
-                /usr/share/smokeping/www/smokeping.fcgi.dist && \
-    mv /usr/share/smokeping/www/smokeping.fcgi.dist \
-                /usr/share/smokeping/www/smokeping.fcgi && \
-    lighttpd-enable-mod cgi && \
+    apt-get clean
+RUN apt-get install -qqy etckeeper && \
+    /bin/sed -i -e 's/#AVOID_DAILY_AUTOCOMMITS=1/AVOID_DAILY_AUTOCOMMITS=1/g' /etc/etckeeper/etckeeper.conf && \
+    /bin/sed -i -e 's/#AVOID_COMMIT_BEFORE_INSTALL=1/AVOID_COMMIT_BEFORE_INSTALL=1/g' /etc/etckeeper/etckeeper.conf
+RUN lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     [ -d /var/cache/smokeping ] || mkdir -p /var/cache/smokeping && \
     [ -d /var/lib/smokeping ] || mkdir -p /var/lib/smokeping && \
@@ -57,6 +23,15 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
+
+COPY conf/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf
+COPY conf/lighttpd/10-cgi.conf /etc/lighttpd/conf-available/10-cgi.conf
+COPY conf/lighttpd/10-fastcgi.conf /etc/lighttpd/conf-available/10-fastcgi.conf
+COPY conf/lighttpd/15-fastcgi-php.conf /etc/lighttpd/conf-available/15-fastcgi-php.conf
+COPY conf/smokeping/config.d/* /etc/smokeping/config.d/
+
+COPY conf/smokeping/smokeping.fcgi /usr/share/smokeping/www/smokeping.fcgi
+
 COPY smokeping.sh /usr/bin/
 
 VOLUME ["/run", "/tmp", "/var/cache", "/var/lib", "/var/log", "/var/tmp", \
