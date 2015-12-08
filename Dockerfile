@@ -5,7 +5,7 @@ MAINTAINER David Personette <dperson@dperson.com>
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
-                fonts-dejavu-core echoping curl lighttpd \
+                fonts-dejavu-core echoping ca-certificates curl lighttpd \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
     /bin/echo -e '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' \
