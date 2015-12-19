@@ -59,8 +59,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
 COPY smokeping.sh /usr/bin/
 
-VOLUME ["/run", "/tmp", "/var/cache", "/var/lib", "/var/log", "/var/tmp", \
-            "/etc/smokeping", "/etc/ssmtp"]
+VOLUME ["/etc/smokeping", "/etc/ssmtp"]
 
 EXPOSE 80
 
