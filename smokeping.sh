@@ -180,8 +180,8 @@ shift $(( OPTIND - 1 ))
 [[ "${OWNER:-""}" ]] && owner "$OWNER"
 [[ "${TARGET:-""}" ]] && eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $TARGET)
 [[ "${TZ:-""}" ]] && timezone "$TZ"
-[[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID smokeping
-[[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID smokeping
+[[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o smokeping
+[[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o smokeping
 
 chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
             /run/smokeping 2>&1 | grep -iv 'Read-only' || :
