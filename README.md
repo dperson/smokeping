@@ -51,7 +51,7 @@ at the '/smokeping/smokeping.cgi' URI.
 
     The 'command' (if provided and valid) will be run instead of smokeping
 
-ENVIROMENT VARIABLES (only available with `docker run`)
+ENVIRONMENT VARIABLES (only available with `docker run`)
 
  * `SPUSER` - If set use named user instead of 'smokeping' (for example root)
  * `WIPE` - If set will wipe all targets
