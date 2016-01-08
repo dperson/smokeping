@@ -156,8 +156,6 @@ The 'command' (if provided and valid) will be run instead of smokeping
     exit $RC
 }
 
-cd /tmp
-
 while getopts ":hg:e:o:t:T:w" opt; do
     case "$opt" in
         h) usage ;;
