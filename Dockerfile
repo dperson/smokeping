@@ -12,7 +12,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 >>/etc/smokeping/config.d/Probes && \
     /bin/echo -e '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' \
                 >>/etc/smokeping/config.d/Probes && \
-    sed -i '/^syslogfacility/s/^/#/' /etc/smokeping/config.d/General
+    sed -i '/^syslogfacility/s/^/#/' /etc/smokeping/config.d/General && \
     sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
     /bin/echo -e '\n# redirect to the right Smokeping URI' \
