@@ -22,7 +22,7 @@ at the '/smokeping/smokeping.cgi' URI.
 
 ## Hosting a Smokeping instance on port 8000
 
-    sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
+    sudo docker run -it --name smokeping -p 8000:80 -d dperson/smokeping
 
 ## Configuration
 
@@ -55,7 +55,7 @@ ENVIRONMENT VARIABLES (only available with `docker run`)
 
  * `SPUSER` - If set use named user instead of 'smokeping' (for example root)
  * `WIPE` - If set will wipe all targets
- * `SSMTP_GMAIL` As above configure the ssmtp daemon for gmail, set to `user;pass`
+ * `SSMTP_GMAIL` As above configure ssmtp for gmail, set to `user;pass`
  * `EMAIL` - As above, your email address as the owner `bob@example.net`
  * `OWNER` - As above, your name as the owner `Bob Hope`
  * `TARGET` - As above a target to check, set to `site;name;target[;alert]`
@@ -66,20 +66,21 @@ ENVIRONMENT VARIABLES (only available with `docker run`)
 ## Examples
 
 Any of the commands can be run at creation with `docker run` or later with
-`docker exec smokeping.sh` (as of version 1.3 of docker).
+`docker exec -it smokeping.sh` (as of version 1.3 of docker).
 
 ### Setting the Timezone
 
-    sudo docker run -p 8000:80 -d dperson/smokeping -T EST5EDT
+    sudo docker run -it -p 8000:80 -d dperson/smokeping -T EST5EDT
 
 OR using `environment variables`
 
-    sudo docker run -p 8000:80 -e TZ=EST5EDT -d dperson/smokeping
+    sudo docker run -it -p 8000:80 -e TZ=EST5EDT -d dperson/smokeping
 
 Will get you the same settings as
 
-    sudo docker run --name smokeping -p 8000:80 -d dperson/smokeping
-    sudo docker exec smokeping smokeping.sh -T EST5EDT ls -AlF /etc/localtime
+    sudo docker run -it --name smokeping -p 8000:80 -d dperson/smokeping
+    sudo docker exec -it smokeping smokeping.sh -T EST5EDT \
+                ls -AlF /etc/localtime
     sudo docker restart smokeping
 
 ### Start smokeping, clear targets, setup a new one to the first hop from ISP:
@@ -87,49 +88,52 @@ Will get you the same settings as
     IP=$(traceroute -n google.com |
                 egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
                 awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
-    sudo docker run -p 8000:80 -d dperson/smokeping -w -t "ISP;NextHop;$IP"
+    sudo docker run -it -p 8000:80 -d dperson/smokeping -w -t "ISP;NextHop;$IP"
 
 OR
 
     IP=$(traceroute -n google.com |
                 egrep -v ' (10|172\.(1[6-9]|2[0-9]|3[01])|192.168)\.' |
                 awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*ms/ {print $2; exit}')
-    sudo docker run -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
+    sudo docker run -it -p 8000:80 -e WIPE=y -e TARGET="ISP;NextHop;$IP" \
                 -d dperson/smokeping
 
 ### To add additional targets (replace values in <> with your own):
 
-    sudo docker exec <name_of_instance> smokeping.sh -t "<site;name;target>"
+    sudo docker exec -it <name_of_instance> smokeping.sh -t "<site;name;target>"
 
 IE
 
-    sudo docker exec stunned_newton smokeping.sh -t "home;router;bob.dyndns.org"
+    sudo docker exec -it stunned_newton smokeping.sh \
+                -t "home;router;bob.dyndns.org"
 
 ### Start smokeping, and configure sSMTP to forward alerts:
 
-    sudo docker run -p 8000:80 -d dperson/smokeping -g "sampleuser;samplepass"
+    sudo docker run -it -p 8000:80 -d dperson/smokeping \
+                -g "sampleuser;samplepass"
 
 OR
 
-    sudo docker run -p 8000:80 -e SSMTP_GMAIL="sampleuser;samplepass" \
+    sudo docker run -it -p 8000:80 -e SSMTP_GMAIL="sampleuser;samplepass" \
                 -d dperson/smokeping
 
 ### Start smokeping, and configure owners email address:
 
-    sudo docker run -p 8000:80 -d dperson/smokeping -e "sampleuser@gmail.com"
+    sudo docker run -it -p 8000:80 -d dperson/smokeping \
+                -e "sampleuser@gmail.com"
 
 OR
 
-    sudo docker run -p 8000:80 -e EMAIL="sampleuser@gmail.com" \
+    sudo docker run -it -p 8000:80 -e EMAIL="sampleuser@gmail.com" \
                 -d dperson/smokeping
 
 ### Start smokeping, and configure owners name:
 
-    sudo docker run -p 8000:80 -d dperson/smokeping -o "Sample User"
+    sudo docker run -it -p 8000:80 -d dperson/smokeping -o "Sample User"
 
 OR
 
-    sudo docker run -p 8000:80 -e OWNER="Sample User" -d dperson/smokeping
+    sudo docker run -it -p 8000:80 -e OWNER="Sample User" -d dperson/smokeping
 
 ## Complex configuration
 
@@ -142,8 +146,8 @@ to copy it from a running container:
 
 You can use the modified configuration with:
 
-    sudo docker run --name smokeping -p 8000:80 -v /some/path:/etc/smokeping:ro\
-                -d dperson/smokeping
+    sudo docker run -it --name smokeping -p 8000:80 \
+                -v /some/path:/etc/smokeping:ro -d dperson/smokeping
 
 # User Feedback
 
@@ -154,7 +158,7 @@ You can use the modified configuration with:
 If you are affected by this issue (a small percentage of users are) please try
 setting the SPUSER environment variable to root, IE:
 
-    sudo docker run --name smokeping -p 8000:80 -e SPUSER=root -d \
+    sudo docker run -it --name smokeping -p 8000:80 -e SPUSER=root -d \
                 dperson/smokeping
 
 ### Reporting
