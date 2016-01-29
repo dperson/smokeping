@@ -194,6 +194,7 @@ elif [[ $# -ge 1 ]]; then
 elif ps -ef | egrep -v 'grep|smokeping.sh' | grep -q smokeping; then
     echo "Service already running, please restart container to apply changes"
 else
-    su -l ${SPUSER:-smokeping} -s /bin/bash -c "exec /usr/sbin/smokeping"
+    su -l ${SPUSER:-smokeping} -s /bin/bash -c \
+                "exec /usr/sbin/smokeping --logfile=/dev/stdout"
     exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
 fi
