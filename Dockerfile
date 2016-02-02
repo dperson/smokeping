@@ -51,13 +51,14 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     [ -d /var/cache/smokeping ] || mkdir -p /var/cache/smokeping && \
     [ -d /var/lib/smokeping ] || mkdir -p /var/lib/smokeping && \
     [ -d /run/smokeping ] || mkdir -p /run/smokeping && \
-    chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
-                /run/smokeping && \
-    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /run/smokeping &&\
-    rm -rf /var/lib/apt/lists/* /tmp/* && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
     ln -s /usr/lib/cgi-bin /var/www/ && \
-    ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/
+    ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/ && \
+    chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
+                /run/smokeping && \
+    chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /run/smokeping && \
+    chmod u+s /usr/bin/fping && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 COPY smokeping.sh /usr/bin/
 
 VOLUME ["/etc/smokeping", "/etc/ssmtp"]

@@ -62,6 +62,7 @@ ENVIRONMENT VARIABLES (only available with `docker run`)
  * `TZ` - As above, configure the zoneinfo timezone, IE `EST5EDT`
  * `USERID` - Set the UID for the app user
  * `GROUPID` - Set the GID for the app user
+ * `DEBUG` - Run smokeping in debug mode
 
 ## Examples
 
