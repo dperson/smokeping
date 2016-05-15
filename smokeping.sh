@@ -28,12 +28,12 @@ gmail() { local user="$1" pass="$2" aliasfile=/etc/ssmtp/revaliases \
     sed -i '/^root/d' $aliasfile
     echo "root:${user}+smokeping@gmail.com:smtp.gmail.com:587" >>$aliasfile
 
-    sed -i 's/^\(root=\).*/\1'"$user"'+smokeping@gmail.com/' $conf
-    sed -i 's/^\(mailhub=\).*/\1smtp.gmail.com:587/' $conf
-    sed -i 's/^#*\(rewriteDomain=\).*/\1gmail.com/' $conf
-    sed -i 's/^\(hostname=\).*/\1localhost/' $conf
-    sed -i '/TLS/,/AuthPass/d' $conf
-    sed -i '/^hostname=localhost$/a \
+    sed -i 's|^\(root=\).*|\1'"$user"'+smokeping@gmail.com|
+                s|^\(mailhub=\).*|\1smtp.gmail.com:587|
+                s|^#*\(rewriteDomain=\).*|\1gmail.com|
+                s|^\(hostname=\).*|\1localhost|
+                /TLS/,/AuthPass/d
+                /^hostname=localhost$/a \
 \
 # Use SSL/TLS before starting negotiation\
 #UseTLS=Yes\
@@ -42,8 +42,8 @@ UseSTARTTLS=Yes\
 # Username/Password\
 AuthUser='"$user"'\
 AuthPass='"$pass"'
-                ' $conf
-    sed -i 's/^#*\(FromLineOverride=\).*/\1YES/' $conf
+
+                s|^#*\(FromLineOverride=\).*|\1YES|' $conf
 }
 
 ### email: Configure owners email address
@@ -51,7 +51,7 @@ AuthPass='"$pass"'
 #   email) your email address
 # Return: setup owners email
 email() { local email="$1" file=/etc/smokeping/config.d/General
-    sed -i "s/^\(contact  = \).*/\\1$email/" $file
+    sed -i "s|^\(contact  = \).*|\\1$email|" $file
 }
 
 ### owner: Configure owners name
@@ -59,7 +59,7 @@ email() { local email="$1" file=/etc/smokeping/config.d/General
 #   name) your name
 # Return: setup owners name
 owner() { local name="$1" file=/etc/smokeping/config.d/General
-    sed -i "s/^\(owner    = \).*/\\1$name/" $file
+    sed -i "s|^\(owner    = \).*|\\1$name|" $file
 }
 
 ### target: Configure a smokeping target
