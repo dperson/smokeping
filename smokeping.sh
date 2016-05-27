@@ -181,6 +181,7 @@ shift $(( OPTIND - 1 ))
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o smokeping
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o smokeping
 
+mkdir -p /run/smokeping
 chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
             /run/smokeping 2>&1 | grep -iv 'Read-only' || :
 chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /run/smokeping 2>&1 |
