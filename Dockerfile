@@ -1,5 +1,5 @@
 FROM debian:jessie
-MAINTAINER David Personette <dperson@dperson.com>
+MAINTAINER David Personette <dperson@gmail.com>
 
 # Install lighttpd and smokeping
 RUN export DEBIAN_FRONTEND='noninteractive' && \
