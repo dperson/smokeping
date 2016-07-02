@@ -21,7 +21,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo '\n# redirect to the right Smokeping URI' >>$conf && \
     echo 'url.redirect  = ("^/$" => "/smokeping/smokeping.cgi",' >>$conf && \
     echo '\t\t\t"^/smokeping/?$" => "/smokeping/smokeping.cgi")' >>$conf && \
-    echo 'url.redirect  = ("^/$" => "/owncloud")' >>$conf && \
     unset conf && \
     sed -i 's|var/log/lighttpd/access.log|dev/stdout|' \
                 /etc/lighttpd/conf-available/10-accesslog.conf && \
