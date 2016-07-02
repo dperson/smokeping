@@ -18,7 +18,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sed -i '/server.document-root/s|/html||' $conf && \
     sed -i '/mod_rewrite/a \ \t"mod_setenv",' $conf && \
     echo '\tdir-listing.activate = "disable"' >>$conf && \
-    echo '}' >>$conf && \
     echo '\n# redirect to the right Smokeping URI' >>$conf && \
     echo 'url.redirect  = ("^/$" => "/smokeping/smokeping.cgi",' >>$conf && \
     echo '\t\t\t"^/smokeping/?$" => "/smokeping/smokeping.cgi")' >>$conf && \
