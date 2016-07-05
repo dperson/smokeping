@@ -22,6 +22,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo "$header"' += ( "X-Content-Type-Options" => "nosniff" )' >>$conf && \
     echo "$header"' += ( "X-Robots-Tag" => "none" )' >>$conf&& \
     echo "$header"' += ( "X-Frame-Options" => "SAMEORIGIN" )' >>$conf && \
+    echo '\n$HTTP["url"] =~ "^/smokeping($|/)" {' >>$conf && \
     echo '\tdir-listing.activate = "disable"\n}' >>$conf && \
     echo '\n# redirect to the right Smokeping URI' >>$conf && \
     echo 'url.redirect  = ("^/$" => "/smokeping/smokeping.cgi",' >>$conf && \
