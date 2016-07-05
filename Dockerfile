@@ -13,38 +13,39 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     /bin/echo -e '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' \
                 >>/etc/smokeping/config.d/Probes && \
     sed -i '/^syslogfacility/s/^/#/' /etc/smokeping/config.d/General && \
-    conf=/etc/lighttpd/lighttpd.conf && \
-    sed -i '/server.errorlog/s|var/log/lighttpd/error.log|dev/stderr|' $conf &&\
+    conf=/etc/lighttpd/lighttpd.conf dir=/etc/lighttpd/conf-available \
+                header=setenv.add-response-header && \
+    sed -i '/server.errorlog/s|^|#|' $conf && \
     sed -i '/server.document-root/s|/html||' $conf && \
-    sed -i '/mod_rewrite/a \ \t"mod_setenv",' $conf && \
-    echo '\tdir-listing.activate = "disable"' >>$conf && \
+    sed -i '/mod_rewrite/a\ \t"mod_setenv",' $conf && \
+    echo "\\n$header"' += ( "X-XSS-Protection" => "1; mode=block" )' >>$conf &&\
+    echo "$header"' += ( "X-Content-Type-Options" => "nosniff" )' >>$conf && \
+    echo "$header"' += ( "X-Robots-Tag" => "none" )' >>$conf&& \
+    echo "$header"' += ( "X-Frame-Options" => "SAMEORIGIN" )' >>$conf && \
+    echo '\tdir-listing.activate = "disable"\n}' >>$conf && \
     echo '\n# redirect to the right Smokeping URI' >>$conf && \
     echo 'url.redirect  = ("^/$" => "/smokeping/smokeping.cgi",' >>$conf && \
     echo '\t\t\t"^/smokeping/?$" => "/smokeping/smokeping.cgi")' >>$conf && \
-    unset conf && \
-    sed -i 's|var/log/lighttpd/access.log|dev/stdout|' \
-                /etc/lighttpd/conf-available/10-accesslog.conf && \
-    sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
-                /etc/lighttpd/conf-available/10-cgi.conf && \
-    sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
-                -e '/max-procs/a \ \t\t"idle-timeout" => 20,' \
-                /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
-    grep -q 'allow-x-send-file' \
-                /etc/lighttpd/conf-available/15-fastcgi-php.conf || { \
-        sed -i '/idle-timeout/a \ \t\t"allow-x-send-file" => "enable",' \
-                    /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
-        sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
-                    /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
-    echo '\nfastcgi.server += ( ".cgi" =>\n\t((' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
+    sed -i 's|var/log/lighttpd/access.log|tmp/log|' $dir/10-accesslog.conf && \
+    sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i\ \t".cgi"  => "/usr/bin/perl",' \
+                $dir/10-cgi.conf && \
+    echo '\nfastcgi.server += ( ".cgi" =>\n\t((' >>$dir/10-fastcgi.conf && \
     echo '\t\t"socket" => "/tmp/perl.socket" + var.PID,' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
+                >>$dir/10-fastcgi.conf && \
     echo '\t\t"bin-path" => "/usr/share/smokeping/www/smokeping.fcgi",'\
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
-    echo '\t\t"docroot" => "/var/www",' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
+                >>$dir/10-fastcgi.conf && \
+    echo '\t\t"docroot" => "/var/www",' >>$dir/10-fastcgi.conf && \
     echo '\t\t"check-local"     => "disable",\n\t))\n)' \
-                >>/etc/lighttpd/conf-available/10-fastcgi.conf && \
+                >>$dir/10-fastcgi.conf && \
+    sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
+                -e '/max-procs/a\ \t\t"idle-timeout" => 20,' \
+                $dir/15-fastcgi-php.conf && \
+    grep -q 'allow-x-send-file' $dir/15-fastcgi-php.conf || { \
+        sed -i '/idle-timeout/a\ \t\t"allow-x-send-file" => "enable",' \
+                    $dir/15-fastcgi-php.conf && \
+        sed -i '/"bin-environment"/a\ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",' \
+                    $dir/15-fastcgi-php.conf; } && \
+    unset conf dir header && \
     sed -i 's|/usr/bin/smokeping_cgi|/usr/lib/cgi-bin/smokeping.cgi|' \
                 /usr/share/smokeping/www/smokeping.fcgi.dist && \
     mv /usr/share/smokeping/www/smokeping.fcgi.dist \

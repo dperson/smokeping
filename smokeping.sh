@@ -182,8 +182,9 @@ shift $(( OPTIND - 1 ))
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o smokeping
 
 mkdir -p /run/smokeping
+mkfifo -m 0660 /tmp/log
 chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
-            /run/smokeping 2>&1 | grep -iv 'Read-only' || :
+            /run/smokeping /tmp/log 2>&1 | grep -iv 'Read-only' || :
 chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /run/smokeping 2>&1 |
             grep -iv 'Read-only' || :
 
@@ -195,8 +196,8 @@ elif [[ $# -ge 1 ]]; then
 elif ps -ef | egrep -v 'grep|smokeping.sh' | grep -q smokeping; then
     echo "Service already running, please restart container to apply changes"
 else
-    chmod 777 /dev/std* 2>/dev/null
+    tail -F /tmp/log &
     su -l ${SPUSER:-smokeping} -s /bin/bash -c \
-            "exec /usr/sbin/smokeping --logfile=/dev/stdout ${DEBUG:+--debug}"
+            "exec /usr/sbin/smokeping --logfile=/tmp/log ${DEBUG:+--debug}"
     exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
 fi
