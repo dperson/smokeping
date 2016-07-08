@@ -182,7 +182,7 @@ shift $(( OPTIND - 1 ))
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o smokeping
 
 mkdir -p /run/smokeping
-mkfifo -m 0660 /tmp/log
+[[ -p /tmp/log ]] || mkfifo -m 0660 /tmp/log
 chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
             /run/smokeping /tmp/log 2>&1 | grep -iv 'Read-only' || :
 chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /run/smokeping 2>&1 |
