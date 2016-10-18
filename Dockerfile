@@ -41,16 +41,12 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     $dir/15-fastcgi-php.conf; } && \
     echo '\t\t"socket" => "/tmp/perl.socket" + var.PID,' \
                 >>$dir/10-fastcgi.conf && \
-    echo '\t\t"bin-path" => "/usr/share/smokeping/www/smokeping.fcgi",'\
+    echo '\t\t"bin-path" => "/usr/lib/cgi-bin/smokeping.cgi",'\
                 >>$dir/10-fastcgi.conf && \
     echo '\t\t"docroot" => "/var/www",' >>$dir/10-fastcgi.conf && \
     echo '\t\t"check-local"     => "disable",\n\t))\n)' \
                 >>$dir/10-fastcgi.conf && \
     unset conf dir header && \
-    sed -i 's|/usr/bin/smokeping_cgi|/usr/lib/cgi-bin/smokeping.cgi|' \
-                /usr/share/smokeping/www/smokeping.fcgi.dist && \
-    mv /usr/share/smokeping/www/smokeping.fcgi.dist \
-                /usr/share/smokeping/www/smokeping.fcgi && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     [ -d /var/cache/smokeping ] || mkdir -p /var/cache/smokeping && \
