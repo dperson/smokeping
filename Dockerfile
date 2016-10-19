@@ -4,8 +4,8 @@ MAINTAINER David Personette <dperson@gmail.com>
 # Install lighttpd and smokeping
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends smokeping ssmtp dnsutils \
-                fonts-dejavu-core echoping ca-certificates curl lighttpd \
+    apt-get install -qqy --no-install-recommends ca-certificates curl dnsutils \
+                echoping fonts-dejavu-core lighttpd psutils smokeping ssmtp \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
     /bin/echo -e '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' \
