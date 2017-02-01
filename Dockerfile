@@ -53,7 +53,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     [ -d /var/lib/smokeping ] || mkdir -p /var/lib/smokeping && \
     [ -d /run/smokeping ] || mkdir -p /run/smokeping && \
     ln -s /usr/share/smokeping/www /var/www/smokeping && \
-    ln -s /usr/lib/cgi-bin /var/www/ && \
     ln -s /usr/lib/cgi-bin/smokeping.cgi /var/www/smokeping/ && \
     chown -Rh smokeping:www-data /var/cache/smokeping /var/lib/smokeping \
                 /run/smokeping && \
