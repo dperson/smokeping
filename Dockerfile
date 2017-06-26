@@ -8,9 +8,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 echoping fonts-dejavu-core lighttpd procps smokeping ssmtp \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
-    /bin/echo -e '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' \
+    echo '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' \
                 >>/etc/smokeping/config.d/Probes && \
-    /bin/echo -e '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' \
+    echo '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' \
                 >>/etc/smokeping/config.d/Probes && \
     sed -i '/^syslogfacility/s/^/#/' /etc/smokeping/config.d/General && \
     conf=/etc/lighttpd/lighttpd.conf dir=/etc/lighttpd/conf-available \
