@@ -6,8 +6,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends ca-certificates curl dnsutils \
                 echoping fonts-dejavu-core lighttpd procps smokeping ssmtp \
+                tcptraceroute bc \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
+    curl -so /usr/bin/tcpping http://pingpros.com/pub/tcpping && \
+    chmod +x /usr/bin/tcpping && \
     echo '+ EchoPingHttp\n\nbinary = /usr/bin/echoping\n' \
                 >>/etc/smokeping/config.d/Probes && \
     echo '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' \
