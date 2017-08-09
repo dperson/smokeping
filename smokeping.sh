@@ -59,7 +59,7 @@ email() { local email="$1" file=/etc/smokeping/config.d/General
 # Arguments:
 #   company) your company name
 # Return: setup company name
-company() { local company="$1" file=/etc/smokeping/config.d/Target
+company() { local company="$1" file=/etc/smokeping/config.d/Targets
     sed -i "s|xxx\ Company|$company|" $file
 }
 
