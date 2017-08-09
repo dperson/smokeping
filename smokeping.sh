@@ -10,7 +10,8 @@
 #  REQUIREMENTS: ---
 #          BUGS: ---
 #         NOTES: ---
-#        AUTHOR: David Personette (dperson@gmail.com),
+#     AUTHOR(s): David Personette (dperson@gmail.com),
+#                Eric Lakich (eric@stack.tech)
 #  ORGANIZATION:
 #       CREATED: 2014-10-16 02:56
 #      REVISION: 1.0
@@ -52,6 +53,14 @@ AuthPass='"$pass"'
 # Return: setup owners email
 email() { local email="$1" file=/etc/smokeping/config.d/General
     sed -i "s|^\(contact  = \).*|\\1$email|" $file
+}
+
+### company: Configure the company name used in the site description
+# Arguments:
+#   company) your company name
+# Return: setup company name
+company() { local company="$1" file=/etc/smokeping/config.d/Targets
+    sed -i "s|xxx\ Company|$company|" $file
 }
 
 ### owner: Configure owners name
@@ -137,6 +146,8 @@ Options (fields in '[]' are optional, '<>' are required):
                 required arg: \"<email>\" - your email address
     -o \"<name>\" Configure name of the owner of smokeping
                 required arg: \"<name>\" - your name
+    -c \"<company>\" Configure name of the company/organization
+                required arg: \"<company>\" - your company name
     -g \"<user;pass>\" Configure ssmtp so that email alerts can be sent
                 required arg: \"<user>\" - your gmail username
                 required arg: \"<pass>\" - your gmail password of app password
@@ -162,6 +173,7 @@ while getopts ":hg:e:o:t:T:w" opt; do
         g) eval gmail $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
         e) email "$OPTARG" ;;
         o) owner "$OPTARG" ;;
+        c) company "$OPTARG" ;;
         t) eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
         T) timezone "$OPTARG" ;;
         w) wipe ;;
@@ -176,6 +188,7 @@ shift $(( OPTIND - 1 ))
             $SSMTP_GMAIL)
 [[ "${EMAIL:-""}" ]] && email "$EMAIL"
 [[ "${OWNER:-""}" ]] && owner "$OWNER"
+[[ "${COMPANY:-""}" ]] && company "$COMPANY"
 [[ "${TARGET:-""}" ]] && eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $TARGET)
 [[ "${TZ:-""}" ]] && timezone "$TZ"
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o smokeping
