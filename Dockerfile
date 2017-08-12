@@ -13,6 +13,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo '+ EchoPingHttps\n\nbinary = /usr/bin/echoping\n' \
                 >>/etc/smokeping/config.d/Probes && \
     sed -i '/^syslogfacility/s/^/#/' /etc/smokeping/config.d/General && \
+    sed -i 's/the \(SmokePing website\) of xxx Company/our \1/' \
+                /etc/smokeping/config.d/General && \
     conf=/etc/lighttpd/lighttpd.conf dir=/etc/lighttpd/conf-available \
                 header=setenv.add-response-header && \
     sed -i '/server.errorlog/s|^|#|' $conf && \
