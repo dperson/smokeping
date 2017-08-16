@@ -17,6 +17,7 @@
 #===============================================================================
 
 set -o nounset                              # Treat unset variables as an error
+slave=false
 
 ### gmail: Configure ssmtp for gmail
 # Arguments:
@@ -44,6 +45,18 @@ AuthUser='"$user"'\
 AuthPass='"$pass"'
 
                 s|^#*\(FromLineOverride=\).*|\1YES|' $conf
+}
+
+### slave: configure this instance as a slave
+# Arguments:
+#   master) master server to use
+#   secret) secret word
+slave() { local master="$1" name="$2" secret="$3"
+        echo $secret > /etc/smokeping/secret.txt
+        chown smokeping:smokeping /etc/smokeping/secret.txt
+        chmod 0600 /etc/smokeping/secret.txt
+        MASTER=$master
+        NAME=$name
 }
 
 ### email: Configure owners email address
@@ -141,6 +154,11 @@ Options (fields in '[]' are optional, '<>' are required):
                 required arg: \"<user>\" - your gmail username
                 required arg: \"<pass>\" - your gmail password of app password
                 These are only set in your docker container
+    -s \"<masterurl;slavename;secret>\" Configure smokeping as slave
+                required arg: \"<masterurl>\" - master URL to use
+                required arg: \"<slavename>\" - slave's name to send
+                required arg: \"<secret>\" - secret to authenticate this slave
+                These are only set in your docker container
     -t \"<site;name;target>[;alert]\" Configure smokeping targets
                 required arg: \"<site>\" - name for site of tests
                 required arg: \"<name>\" - name for check
@@ -156,10 +174,11 @@ The 'command' (if provided and valid) will be run instead of smokeping
     exit $RC
 }
 
-while getopts ":hg:e:o:t:T:w" opt; do
+while getopts ":hg:e:s:o:t:T:w" opt; do
     case "$opt" in
         h) usage ;;
         g) eval gmail $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
+        s) slave=true && eval slave $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
         e) email "$OPTARG" ;;
         o) owner "$OPTARG" ;;
         t) eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
@@ -177,6 +196,7 @@ shift $(( OPTIND - 1 ))
 [[ "${EMAIL:-""}" ]] && email "$EMAIL"
 [[ "${OWNER:-""}" ]] && owner "$OWNER"
 [[ "${TARGET:-""}" ]] && eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $TARGET)
+[[ "${SLAVE:-""}" ]] && slave=true && eval slave $(sed 's/^\|$/"/g; s/;/" "/g' <<< $SLAVE)
 [[ "${TZ:-""}" ]] && timezone "$TZ"
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o smokeping
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o smokeping
@@ -190,6 +210,10 @@ chmod -R g+ws /var/cache/smokeping /var/lib/smokeping /run/smokeping 2>&1 |
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
+elif [ $slave == true ]; then
+        echo "Running as slave instance for ${MASTER}"
+        su -l ${SPUSER:-smokeping} -s /bin/bash -c \
+                "exec /usr/sbin/smokeping --nodaemon --logfile=/tmp/log ${DEBUG:+--debug} --master-url=${MASTER} --slave-name=${NAME} --shared-secret=/etc/smokeping/secret.txt --cache-dir=/var/cache/smokeping"
 elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
     exit 13
