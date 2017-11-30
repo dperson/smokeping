@@ -66,9 +66,7 @@ owner() { local name="$1" file=/etc/smokeping/config.d/General
 # Arguments:
 #   ping_count) ping count
 # Return: setup ping count in /etc/smokeping/config.d/Database
-pingcount() {
-    ping_count="$1"
-    file=/etc/smokeping/config.d/Database
+pingcount() { local ping_count="$1" file=/etc/smokeping/config.d/Database
     sed -i "s|^\(pings.*=\).*$|\1 $ping_count|g" $file
 }
 
@@ -76,9 +74,7 @@ pingcount() {
 # Arguments:
 #   step_time) DB step time in seconds
 # Return: setup DB step time in /etc/smokeping/config.d/Database
-dbstep() {
-    step_time="$1"
-    file=/etc/smokeping/config.d/Database
+dbstep() { local step_time="$1" file=/etc/smokeping/config.d/Database
     sed -i "s|^\(step.*=\).*$|\1 $step_time|g" $file
 }
 
