@@ -62,6 +62,26 @@ owner() { local name="$1" file=/etc/smokeping/config.d/General
     sed -i "s|^\(owner    = \).*|\\1$name|" $file
 }
 
+### pingcount: Configure the ping count
+# Arguments:
+#   ping_count) ping count
+# Return: setup ping count in /etc/smokeping/config.d/Database
+pingcount() {
+    ping_count="$1"
+    file=/etc/smokeping/config.d/Database
+    sed -i "s|^\(pings.*=\).*$|\1 $ping_count|g" $file
+}
+
+### dbstep: Configure the default DB Step interval
+# Arguments:
+#   step_time) DB step time in seconds
+# Return: setup DB step time in /etc/smokeping/config.d/Database
+dbstep() {
+    step_time="$1"
+    file=/etc/smokeping/config.d/Database
+    sed -i "s|^\(step.*=\).*$|\1 $step_time|g" $file
+}
+
 ### target: Configure a smokeping target
 # Arguments:
 #   site) name for site of tests
@@ -133,6 +153,8 @@ usage() { local RC=${1:-0}
     echo "Usage: ${0##*/} [-opt] [command]
 Options (fields in '[]' are optional, '<>' are required):
     -h          This help
+    -c \"<ping count>\" Configure the default ping count
+                possible arg: \"[integer]\" - ping count
     -e \"<email>\" Configure email address for owner of smokeping
                 required arg: \"<email>\" - your email address
     -o \"<name>\" Configure name of the owner of smokeping
@@ -141,6 +163,8 @@ Options (fields in '[]' are optional, '<>' are required):
                 required arg: \"<user>\" - your gmail username
                 required arg: \"<pass>\" - your gmail password of app password
                 These are only set in your docker container
+    -s \"<db step>\" Configure the time step for DB entries
+                possible arg: \"[integer]\" - time step in seconds
     -t \"<site;name;target>[;alert]\" Configure smokeping targets
                 required arg: \"<site>\" - name for site of tests
                 required arg: \"<name>\" - name for check
@@ -156,12 +180,14 @@ The 'command' (if provided and valid) will be run instead of smokeping
     exit $RC
 }
 
-while getopts ":hg:e:o:t:T:w" opt; do
+while getopts ":hg:e:o:c:s:t:T:w" opt; do
     case "$opt" in
         h) usage ;;
         g) eval gmail $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
         e) email "$OPTARG" ;;
         o) owner "$OPTARG" ;;
+        c) pingcount "$OPTARG" ;;
+        s) dbstep "$OPTARG" ;;
         t) eval target $(sed 's/^\|$/"/g; s/;/" "/g' <<< $OPTARG) ;;
         T) timezone "$OPTARG" ;;
         w) wipe ;;
