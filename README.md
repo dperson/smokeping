@@ -31,6 +31,8 @@ at the '/smokeping/smokeping.cgi' URI.
     Usage: smokeping.sh [-opt] [command]
     Options (fields in '[]' are optional, '<>' are required):
         -h          This help
+        -c "<count>" Configure the default ping count
+                    possible arg: \"[integer]\" - ping count
         -g "<user;pass>" Configure ssmtp so that email alerts can be sent
                     required arg: "<user>" - your gmail username
                     required arg: "<pass>" - your gmail password of app password
@@ -39,6 +41,8 @@ at the '/smokeping/smokeping.cgi' URI.
                     required arg: "<email>" - your email address
         -o "<name>" Configure name of the owner of smokeping
                     required arg: "<name>" - your name
+        -s "<step>" Configure the time step for DB entries
+                    possible arg: \"[integer]\" - time step in seconds
         -t "<site;name;target>[;alert]" Configure smokeping targets
                     required arg: "<site>" - name for site of tests
                     required arg: "<name>" - name for check
@@ -58,6 +62,8 @@ ENVIRONMENT VARIABLES (only available with `docker run`)
  * `SSMTP_GMAIL` As above configure ssmtp for gmail, set to `user;pass`
  * `EMAIL` - As above, your email address as the owner `bob@example.net`
  * `OWNER` - As above, your name as the owner `Bob Hope`
+ * `PING` - As above, the number of pings to try
+ * `STEP` - As above, the time step for DB entries
  * `TARGET` - As above a target to check, set to `site;name;target[;alert]`
  * `TZ` - As above, configure the zoneinfo timezone, IE `EST5EDT`
  * `USERID` - Set the UID for the app user
