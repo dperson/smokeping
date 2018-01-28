@@ -141,6 +141,13 @@ wipe() { local file=/etc/smokeping/config.d/Targets
     sed -i '/^+/,$d' $file
 }
 
+exec_as() {
+    local user=$1
+    local command=$2
+
+    su -l "${user}" -s /bin/bash -c "exec ${command}"
+}
+
 ### usage: Help
 # Arguments:
 #   none)
@@ -218,10 +225,13 @@ elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
     exit 13
 elif ps -ef | egrep -v 'grep|smokeping.sh' | grep -q smokeping; then
-    echo "Service already running, please restart container to apply changes"
+    echo "Service already running, reloading configuration"
+    exec_as "${SPUSER:-smokeping}" "/usr/sbin/smokeping --reload"
+    kill -HUP "$(pidof lighttpd-angel)"
+
 else
     tail -F /tmp/log &
-    su -l ${SPUSER:-smokeping} -s /bin/bash -c \
-            "exec /usr/sbin/smokeping --logfile=/tmp/log ${DEBUG:+--debug}"
-    exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
+    exec_as "${SPUSER:-smokeping}" \
+        "/usr/sbin/smokeping --logfile=/tmp/log ${DEBUG:+--debug}"
+    exec lighttpd-angel -D -f /etc/lighttpd/lighttpd.conf
 fi
