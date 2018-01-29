@@ -218,10 +218,13 @@ elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
     exit 13
 elif ps -ef | egrep -v 'grep|smokeping.sh' | grep -q smokeping; then
-    echo "Service already running, please restart container to apply changes"
+    echo "Service already running, reloading configuration"
+    su -l ${SPUSER:-smokeping} -s /bin/bash -c \
+                "exec /usr/sbin/smokeping --reload"
+    kill -HUP "$(pidof lighttpd-angel)"
 else
     tail -F /tmp/log &
     su -l ${SPUSER:-smokeping} -s /bin/bash -c \
-            "exec /usr/sbin/smokeping --logfile=/tmp/log ${DEBUG:+--debug}"
-    exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
+                "exec /usr/sbin/smokeping --logfile=/tmp/log ${DEBUG:+--debug}"
+    exec lighttpd-angel -D -f /etc/lighttpd/lighttpd.conf
 fi
