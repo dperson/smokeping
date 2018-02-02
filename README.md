@@ -73,7 +73,7 @@ ENVIRONMENT VARIABLES (only available with `docker run`)
 ## Examples
 
 Any of the commands can be run at creation with `docker run` or later with
-`docker exec -it smokeping.sh` (as of version 1.3 of docker).
+`docker exec -it smokeping smokeping.sh` (as of version 1.3 of docker).
 
 ### Setting the Timezone
 
@@ -107,12 +107,11 @@ OR
 
 ### To add additional targets (replace values in <> with your own):
 
-    sudo docker exec -it <name_of_instance> smokeping.sh -t "<site;name;target>"
+    sudo docker exec -it smokeping smokeping.sh -t "<site;name;target>"
 
 IE
 
-    sudo docker exec -it stunned_newton smokeping.sh \
-                -t "home;router;bob.dyndns.org"
+    sudo docker exec -it smokeping smokeping.sh -t "home;router;bob.dyndns.org"
 
 ### Start smokeping, and configure sSMTP to forward alerts:
 
