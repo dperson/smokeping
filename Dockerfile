@@ -17,6 +17,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 /etc/smokeping/config.d/General && \
     conf=/etc/lighttpd/lighttpd.conf dir=/etc/lighttpd/conf-available \
                 header=setenv.add-response-header && \
+    sed -i '/server.modules = (/a \\t"mod_setenv",' $conf && \
     sed -i '/server.errorlog/s|^|#|' $conf && \
     sed -i '/server.document-root/s|/html||' $conf && \
     sed -i '/mod_rewrite/a\ \t"mod_setenv",' $conf && \
