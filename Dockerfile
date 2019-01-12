@@ -19,7 +19,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 header=setenv.add-response-header && \
     sed -i '/server.errorlog/s|^|#|' $conf && \
     sed -i '/server.document-root/s|/html||' $conf && \
-    sed -i '/mod_rewrite/a\ \t"mod_setenv",' $conf && \
+    sed -i '/server.modules = (/a \t"mod_setenv",' $conf && \
     echo "\\n$header"' += ( "X-XSS-Protection" => "1; mode=block" )' >>$conf &&\
     echo "$header"' += ( "X-Content-Type-Options" => "nosniff" )' >>$conf && \
     echo "$header"' += ( "X-Robots-Tag" => "none" )' >>$conf&& \
